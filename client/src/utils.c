@@ -21,7 +21,7 @@ int crear_conexion(char *ip, char* puerto)
 	struct addrinfo hints;
 	struct addrinfo *server_info;
 
-	memset(&hints, 0, sizeof(hints));
+	memset(&hints, 0, sizeof(hints)); // INICIALIZO todos los campos de la struct "addrinfo" a 0, y luego abajo solo completo 3 de ellos
 	hints.ai_family = AF_INET;
 	hints.ai_socktype = SOCK_STREAM;
 	hints.ai_flags = AI_PASSIVE;
