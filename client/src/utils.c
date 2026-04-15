@@ -16,7 +16,7 @@ void* serializar_paquete(t_paquete* paquete, int bytes)
 	return magic;
 }
 
-int crear_conexion(char *ip, char* puerto)
+int crear_conexion(char *ip, char* puerto) //el hecho de crear SOCKET "CONEXION" es literalmente "crear el enchufe macho, de X aparato"
 {
 	struct addrinfo hints;
 	struct addrinfo *server_info;

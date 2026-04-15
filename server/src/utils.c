@@ -19,10 +19,18 @@ int iniciar_servidor(void)
 	getaddrinfo(NULL, PUERTO, &hints, &servinfo);
 
 	// Creamos el socket de escucha del servidor
+        // TODO
+        //aca calculo que tendria que poner "int fd_escucha = socket(etc etc etc...)"
+        //PD: fd_escucha no me gusta para nada, cambiarlo
+    
+    // ANTES de asociar con BIND, uso setsockport: REUSEPORT para que el SO me permita "reutilizar" puertos
+    err = setsockopt(fd_escucha, SOL_SOCKET, SO_REUSEPORT, &(int){1}, sizeof(int));
+    
+	// Asociamos el socket a un puerto CON BIND()
+    err = bind(fd_escucha, server_info->ai_addr, server_info->ai_addrlen);
 
-	// Asociamos el socket a un puerto
-
-	// Escuchamos las conexiones entrantes
+	// Escuchamos las conexiones entrantes CON LISTEN() (creo)
+    err = listen(fd_escucha, SOMAXCONN);
 
 	freeaddrinfo(servinfo);
 	log_trace(logger, "Listo para escuchar a mi cliente");

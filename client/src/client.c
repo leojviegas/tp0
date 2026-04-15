@@ -39,7 +39,9 @@ int main(void)
 	// ADVERTENCIA: Antes de continuar, tenemos que asegurarnos que el servidor esté corriendo para poder conectarnos a él
 
 	// Creamos una conexión hacia el servidor
-	conexion = crear_conexion(ip, puerto);
+	conexion = crear_conexion(ip, puerto); //el hecho de crear SOCKET "CONEXION" es literalmente "crear el enchufe macho, de X aparato"
+                                            //y el "crear SOCKET ESCUCHA" es "crear el enchufe HEMBRA (o el tomacorriente) de la pared"
+
 
 	// Enviamos al servidor el valor de CLAVE como mensaje
 
