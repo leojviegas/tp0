@@ -1,13 +1,16 @@
 #include"utils.h"
 
+
 t_log* logger;
 
 int iniciar_servidor(void)
 {
 	// Quitar esta línea cuando hayamos terminado de implementar la funcion
-	assert(!"no implementado!");
+	//assert(!"no implementado!");
 
 	int socket_servidor;
+
+
 
 	struct addrinfo hints, *servinfo, *p;
 
@@ -22,7 +25,7 @@ int iniciar_servidor(void)
         // TODO
         //aca calculo que tendria que poner "int fd_escucha = socket(etc etc etc...)"
         //PD: fd_escucha no me gusta para nada, cambiarlo
-    
+ /*   
     // ANTES de asociar con BIND, uso setsockport: REUSEPORT para que el SO me permita "reutilizar" puertos
     err = setsockopt(fd_escucha, SOL_SOCKET, SO_REUSEPORT, &(int){1}, sizeof(int));
     
@@ -35,13 +38,15 @@ int iniciar_servidor(void)
 	freeaddrinfo(servinfo);
 	log_trace(logger, "Listo para escuchar a mi cliente");
 
+
+*/
 	return socket_servidor;
 }
 
 int esperar_cliente(int socket_servidor)
 {
 	// Quitar esta línea cuando hayamos terminado de implementar la funcion
-	assert(!"no implementado!");
+	//assert(!"no implementado!");
 
 	// Aceptamos un nuevo cliente
 	int socket_cliente;

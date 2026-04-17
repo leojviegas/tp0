@@ -4,14 +4,14 @@
 		"files.associations": {
 			"*.h": "c",
 		},
-		"C_Cpp.errorSquiggles": "disabled",
+		"C_Cpp.errorSquiggles": "enabled",
 	},
 	"folders": [
-		{
-			"path": "client"
-		},
-		{
-			"path": "server"
-		}
-	]
+        {
+            "path": "client"
+        },
+        {
+            "path": "server"
+        }
+    ]
 }
