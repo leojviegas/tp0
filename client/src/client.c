@@ -95,17 +95,30 @@ void leer_consola(t_log* logger)
 {
 	char* lineaDeEntrada;
 
-    do
+    while (1)
     {
-        // El resto, las vamos leyendo y logueando hasta recibir un string vacío
         lineaDeEntrada = readline("> ");
 
+        // Controlar si el usuario envió EOF (ej. Ctrl+D)
+        if (lineaDeEntrada == NULL) {
+            break;
+        }
+
+        // Controlar si se ingresó un string vacío para salir
+        if (strcmp(lineaDeEntrada, "") == 0) {
+            free(lineaDeEntrada); // Liberar el string vacío antes de romper el ciclo
+            break;
+        }
+
+        // Procesar y loguear la línea
         log_info(logger, lineaDeEntrada);
-        /* code */
-    } while (strcmp(lineaDeEntrada, ""));
+
+        // Liberar la memoria de la iteración actual antes de la siguiente lectura
+        free(lineaDeEntrada);
+    }
+
 
 	// ¡No te olvides de liberar las lineas antes de regresar!
-    free(lineaDeEntrada);
 
 }
 
@@ -127,4 +140,5 @@ void terminar_programa(int conexion, t_log* logger, t_config* config)
     /* Y por ultimo, hay que liberar lo que utilizamos (conexion, log y config) 
     con las funciones de las commons y del TP mencionadas en el enunciado */
     log_destroy(logger);
+    config_destroy(config);
 }
