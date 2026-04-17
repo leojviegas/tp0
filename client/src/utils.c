@@ -1,5 +1,6 @@
 #include "utils.h"
 
+t_log* logger;
 
 void* serializar_paquete(t_paquete* paquete, int bytes)
 {
@@ -18,22 +19,32 @@ void* serializar_paquete(t_paquete* paquete, int bytes)
 
 int crear_conexion(char *ip, char* puerto) //el hecho de crear SOCKET "CONEXION" es literalmente "crear el enchufe macho, de X aparato"
 {
+    int err;
 	struct addrinfo hints;
 	struct addrinfo *server_info;
 
 	memset(&hints, 0, sizeof(hints)); // INICIALIZO todos los campos de la struct "addrinfo" a 0, y luego abajo solo completo 3 de ellos
 	hints.ai_family = AF_INET;
 	hints.ai_socktype = SOCK_STREAM;
-	hints.ai_flags = AI_PASSIVE;
 
-	getaddrinfo(ip, puerto, &hints, &server_info);
+	err = getaddrinfo(ip, puerto, &hints, &server_info);
 
 	// Ahora vamos a crear el socket.
-	int socket_cliente = 0;
+	int socket_cliente = socket(server_info->ai_family,
+                         server_info->ai_socktype,
+                         server_info->ai_protocol);;
 
 	// Ahora que tenemos el socket, vamos a conectarlo
-
-
+    err = connect(socket_cliente, server_info->ai_addr, server_info->ai_addrlen);
+    
+    if (err != 0)
+    {
+        logger = log_create("tp0Client.log","client.exe", true, LOG_LEVEL_INFO);
+        log_error(logger, "ERROR, servidor no abierto. 'err' termino con valor: &d. Abortando...\n", err);
+        abort();
+    }
+    
+    printf("me pude conectar al servidor!\n");
 	freeaddrinfo(server_info);
 
 	return socket_cliente;

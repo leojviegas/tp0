@@ -5,7 +5,7 @@ int main(void)
 {
 	/*---------------------------------------------------PARTE 2-------------------------------------------------------------*/
 
-	int conexion;
+	int cliente_fd;
 	char* ip;
 	char* puerto;
 	char* valor;
@@ -32,10 +32,10 @@ int main(void)
         // Usando el config creado previamente, leemos los valores del config y los 
         // dejamos en las variables 'ip', 'puerto' y 'valor'
     
-        valor = config_get_string_value(config, "CLAVE");
-        ip = config_get_string_value(config, "IP");
-        puerto = config_get_string_value(config, "PUERTO");
-        
+    valor = config_get_string_value(config, "CLAVE");
+    ip = config_get_string_value(config, "IP");
+    puerto = config_get_string_value(config, "PUERTO");
+    
         
         // Loggeamos el valor de config
     log_info(logger, valor);
@@ -44,27 +44,26 @@ int main(void)
 
 
 
-
-
 	/* ---------------- LEER DE CONSOLA ---------------- */
 
-	leer_consola(logger);
+	//leer_consola(logger);
 
 	/*---------------------------------------------------PARTE 3-------------------------------------------------------------*/
 
 	// ADVERTENCIA: Antes de continuar, tenemos que asegurarnos que el servidor esté corriendo para poder conectarnos a él
 
 	// Creamos una conexión hacia el servidor
-	conexion = crear_conexion(ip, puerto); //el hecho de crear SOCKET "CONEXION" es literalmente "crear el enchufe macho, de X aparato"
+	cliente_fd = crear_conexion(ip, puerto); //el hecho de crear SOCKET "CONEXION" es literalmente "crear el enchufe macho, de X aparato"
                                             //y el "crear SOCKET ESCUCHA" es "crear el enchufe HEMBRA (o el tomacorriente) de la pared"
 
 
 	// Enviamos al servidor el valor de CLAVE como mensaje
+    
 
 	// Armamos y enviamos el paquete
-	paquete(conexion);
+	paquete(cliente_fd);
 
-	terminar_programa(conexion, logger, config);
+	terminar_programa(cliente_fd, logger, config);
 
 	
 }
@@ -98,14 +97,8 @@ void leer_consola(t_log* logger)
     while (1)
     {
         lineaDeEntrada = readline("> ");
-
         // Controlar si el usuario envió EOF (ej. Ctrl+D)
-        if (lineaDeEntrada == NULL) {
-            break;
-        }
-
-        // Controlar si se ingresó un string vacío para salir
-        if (strcmp(lineaDeEntrada, "") == 0) {
+        if (lineaDeEntrada == NULL || string_equals_ignore_case(lineaDeEntrada, "")) {
             free(lineaDeEntrada); // Liberar el string vacío antes de romper el ciclo
             break;
         }
@@ -116,13 +109,9 @@ void leer_consola(t_log* logger)
         // Liberar la memoria de la iteración actual antes de la siguiente lectura
         free(lineaDeEntrada);
     }
-
-
-	// ¡No te olvides de liberar las lineas antes de regresar!
-
 }
 
-void paquete(int conexion)
+void paquete(int cliente_fd)
 {
 	// Ahora toca lo divertido!
 	char* leido;
@@ -135,9 +124,9 @@ void paquete(int conexion)
 	
 }
 
-void terminar_programa(int conexion, t_log* logger, t_config* config)
+void terminar_programa(int cliente_fd, t_log* logger, t_config* config)
 {
-    /* Y por ultimo, hay que liberar lo que utilizamos (conexion, log y config) 
+    /* Y por ultimo, hay que liberar lo que utilizamos (cliente_fd, log y config) 
     con las funciones de las commons y del TP mencionadas en el enunciado */
     log_destroy(logger);
     config_destroy(config);
