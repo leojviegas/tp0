@@ -1,4 +1,6 @@
 #include "utils.h"
+#include <commons/log.h>
+
 
 t_log* logger;
 
@@ -19,6 +21,8 @@ void* serializar_paquete(t_paquete* paquete, int bytes)
 
 int crear_conexion(char *ip, char* puerto) //el hecho de crear SOCKET "CONEXION" es literalmente "crear el enchufe macho, de X aparato"
 {
+	t_log* logger = log_create("tp0Client.log","utils.c", true, LOG_LEVEL_INFO);
+
     int err;
 	struct addrinfo hints;
 	struct addrinfo *server_info;
@@ -35,17 +39,20 @@ int crear_conexion(char *ip, char* puerto) //el hecho de crear SOCKET "CONEXION"
                          server_info->ai_protocol);;
 
 	// Ahora que tenemos el socket, vamos a conectarlo
-    err = connect(socket_cliente, server_info->ai_addr, server_info->ai_addrlen);
+   
+    connect(socket_cliente, server_info->ai_addr, server_info->ai_addrlen);
+    
     
     if (err != 0)
     {
-        logger = log_create("tp0Client.log","client.exe", true, LOG_LEVEL_INFO);
-        log_error(logger, "ERROR, servidor no abierto. 'err' termino con valor: &d. Abortando...\n", err);
+        log_error(logger, "ERROR: no se pudo conectar al servidor. 'err' devolvio: %d abortando... ", err);
         abort();
     }
-    
-    printf("me pude conectar al servidor!\n");
+    else {
+        log_info(logger,"me pude conectar al servidor!" );
+    }
 	freeaddrinfo(server_info);
+
 
 	return socket_cliente;
 }

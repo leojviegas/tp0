@@ -1,5 +1,4 @@
 #include "client.h"
-//#include <readline/readline.h>
 
 int main(void)
 {
@@ -56,12 +55,16 @@ int main(void)
 	cliente_fd = crear_conexion(ip, puerto); //el hecho de crear SOCKET "CONEXION" es literalmente "crear el enchufe macho, de X aparato"
                                             //y el "crear SOCKET ESCUCHA" es "crear el enchufe HEMBRA (o el tomacorriente) de la pared"
 
-
 	// Enviamos al servidor el valor de CLAVE como mensaje
-    
+    log_info(logger, "Hecha la conexion, se enviara un mensaje en 3 segundos...\n");
+    sleep(3);
+    enviar_mensaje(valor, cliente_fd);
 
 	// Armamos y enviamos el paquete
 	paquete(cliente_fd);
+
+
+
 
 	terminar_programa(cliente_fd, logger, config);
 
@@ -109,6 +112,8 @@ void leer_consola(t_log* logger)
         // Liberar la memoria de la iteración actual antes de la siguiente lectura
         free(lineaDeEntrada);
     }
+
+    
 }
 
 void paquete(int cliente_fd)
@@ -130,4 +135,5 @@ void terminar_programa(int cliente_fd, t_log* logger, t_config* config)
     con las funciones de las commons y del TP mencionadas en el enunciado */
     log_destroy(logger);
     config_destroy(config);
+    liberar_conexion(cliente_fd);
 }
