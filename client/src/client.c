@@ -56,16 +56,14 @@ int main(void)
                                             //y el "crear SOCKET ESCUCHA" es "crear el enchufe HEMBRA (o el tomacorriente) de la pared"
 
 	// Enviamos al servidor el valor de CLAVE como mensaje
-    log_info(logger, "Hecha la conexion, se enviara un mensaje en 3 segundos...\n");
+    log_info(logger, "Hecha la conexion, se enviara un mensaje en 3 segundos...");
     sleep(3);
     enviar_mensaje(valor, cliente_fd);
 
 	// Armamos y enviamos el paquete
 	paquete(cliente_fd);
 
-
-
-
+    
 	terminar_programa(cliente_fd, logger, config);
 
 	
@@ -95,22 +93,22 @@ t_config* iniciar_config(void)
 
 void leer_consola(t_log* logger)
 {
-	char* lineaDeEntrada;
+	char* lineaLeida;
 
     while (1)
     {
-        lineaDeEntrada = readline("> ");
+        lineaLeida = readline("> ");
         // Controlar si el usuario envió EOF (ej. Ctrl+D)
-        if (lineaDeEntrada == NULL || string_equals_ignore_case(lineaDeEntrada, "")) {
-            free(lineaDeEntrada); // Liberar el string vacío antes de romper el ciclo
+        if (lineaLeida == NULL || string_equals_ignore_case(lineaLeida, "")) {
+            free(lineaLeida); // Liberar el string vacío antes de romper el ciclo
             break;
         }
 
         // Procesar y loguear la línea
-        log_info(logger, lineaDeEntrada);
+        log_info(logger, lineaLeida);
 
         // Liberar la memoria de la iteración actual antes de la siguiente lectura
-        free(lineaDeEntrada);
+        free(lineaLeida);
     }
 
     
@@ -119,13 +117,31 @@ void leer_consola(t_log* logger)
 void paquete(int cliente_fd)
 {
 	// Ahora toca lo divertido!
-	char* leido;
-	t_paquete* paquete;
+	char* lineaLeida;
+    int tamanioLinea;
+	t_paquete* paquete = crear_paquete();
 
 	// Leemos y esta vez agregamos las lineas al paquete
-
-
+    while (1)
+    {
+        lineaLeida = readline("> ");
+        // Controlar si el usuario envió EOF (ej. Ctrl+D)
+        if (lineaLeida == NULL || string_equals_ignore_case(lineaLeida, "")) {
+            free(lineaLeida); // Liberar el string vacío antes de romper el ciclo
+            break;
+        }
+        tamanioLinea = string_length(lineaLeida) + 1;
+        agregar_a_paquete(paquete, lineaLeida, tamanioLinea);
+        
+        
+        // Liberar la memoria de la iteración actual antes de la siguiente lectura
+        free(lineaLeida);
+    }
+    
+    
+    enviar_paquete(paquete, cliente_fd);
 	// ¡No te olvides de liberar las líneas y el paquete antes de regresar!
+    eliminar_paquete(paquete);
 	
 }
 
